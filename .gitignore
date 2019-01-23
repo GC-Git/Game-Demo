@@ -1,0 +1,6 @@
+node_modules
+*.zip
+*.mp4
+Baystation12-dev
+.nyc_output
+coverage
