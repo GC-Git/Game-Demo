@@ -12,6 +12,7 @@ window.onload = function(){
         game.update();
 
         // TODO: Tidy this up and do it right.
+        /*
         if(controller.up.active)    { game.world_1.player.physics2D.moveUp() }
         if(controller.down.active)  { game.world_1.player.physics2D.moveDown() }
         if(controller.left.active)  { game.world_1.player.physics2D.moveLeft() }
@@ -20,12 +21,13 @@ window.onload = function(){
         game.world_1.player.physics2D.velocity_y *= game.world_1.gameMap.friction
 
         console.log("y: " + game.world_1.player.physics2D.y.toFixed(0) + " x: " + game.world_1.player.physics2D.x.toFixed(0)) 
+        */
         
 
-        if(controller.up.active)    { game.world.player.moveUp() }
-        if(controller.down.active)  { game.world.player.moveDown() }
-        if(controller.left.active)  { game.world.player.moveLeft() }
-        if(controller.right.active) { game.world.player.moveRight() }
+        if(controller.up.active)    { game.world.player.physics2D.moveUp() }
+        if(controller.down.active)  { game.world.player.physics2D.moveDown() }
+        if(controller.left.active)  { game.world.player.physics2D.moveLeft() }
+        if(controller.right.active) { game.world.player.physics2D.moveRight() }
     }
         
     /**
@@ -36,22 +38,28 @@ window.onload = function(){
         // TODO: Transfer display functionality to the new ECS
         display.drawBG(bg)
         display.drawImage(
-            game.world.player.x,
-            game.world.player.y, 
-            game.world.player.width, 
-            game.world.player.height, 
+            game.world.player.physics2D.x,
+            game.world.player.physics2D.y, 
+            game.world.player.square.width, 
+            game.world.player.square.height, 
             charImg
         )
-        display.render(x=game.world.player.x+(game.world.player.width/2), y=game.world.player.y+(game.world.player.height/2))
+        display.render(
+            x=game.world.player.physics2D.x+(game.world.player.square.width/2), y=game.world.player.physics2D.y+(game.world.player.square.height/2)
+        )
 
-        // Show degree of direction
-        display.context.font = "30px Arial";
+
         display.context.fillStyle = "white";
-        display.context.fillRect(5,15, 200, 110)
+        display.context.fillRect(5,15, 200, 110);
+
+        display.context.font = "30px Arial";
         display.context.fillStyle = "black";
-        display.context.fillText(game.world.player.angle.toFixed(0), 10, 50);
-        display.context.fillText("vel_ x: " + game.world.player.velocity_x.toFixed(0), 10, 80);
-        display.context.fillText("vel_ y: " + game.world.player.velocity_y.toFixed(0), 10, 110);
+
+        display.context.fillText("Degrees: "+game.world.player.physics2D.angle().toFixed(0), 10, 50);
+
+        display.context.fillText("vel X: " + game.world.player.physics2D.velocity_x.toFixed(0), 10, 80);
+
+        display.context.fillText("vel_Y: " + game.world.player.physics2D.velocity_y.toFixed(0), 10, 110);
     }
 
     /**
@@ -61,7 +69,7 @@ window.onload = function(){
         display.resize(
             document.documentElement.clientWidth-32,
             document.documentElement.clientHeight-32,
-            game.world.height / game.world.width
+            game.world.gameMap.height / game.world.gameMap.width
         )
         display.render()
     }
@@ -102,14 +110,14 @@ window.onload = function(){
     /* This is very important. The buffer canvas must be pixel for pixel the same
     size as the world dimensions to properly scale the graphics. All the game knows
     are player location and world dimensions. We have to tell the display to match them. */
-    display.buffer.canvas.height =  game.world.height;
-    display.buffer.canvas.width =   game.world.width;
+    display.buffer.canvas.height =  game.world.gameMap.height;
+    display.buffer.canvas.width =   game.world.gameMap.width;
 
     // On page load, resize the canvas to fit the window
     display.resize(
         document.documentElement.clientWidth-32,
         document.documentElement.clientHeight-32,
-        game.world.height / game.world.width
+        game.world.gameMap.height / game.world.gameMap.width
     )
 
     // ============================
@@ -123,7 +131,6 @@ window.onload = function(){
     // ============================
     //         START GAME
     // ============================
-    console.log(game.world.ecs)
     display.render();
     engine.start();
     render();
