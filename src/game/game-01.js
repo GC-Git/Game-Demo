@@ -1,4 +1,12 @@
 const nano = require('nano-ecs');
+const nanoSystems = require('./systems-manager'); 
+
+// Systems
+const Physics2DMovement = require('./systems/Physics2DMovement');
+const CollisionDetection = require('./systems/CollisionDetection') 
+
+// Assemblages
+const GameMap = require('./assemblages/gameMap');
 
 module.exports = class Game {
     constructor() {
@@ -6,13 +14,21 @@ module.exports = class Game {
             backgroundColor: "rgba(45,48,56,0.25)",
             friction: 0.95,
             player: new Game.Player(),
-            npc: new Game.Player(),
             height: 3000,
             width: 3000,
         }
+        this.ecs = nano()
+
+        // Entities
+        // TODO: Transfer display functionality to the new ECS        
+        this.world_1 = GameMap.default(this.ecs)
+        this.systemsManager = nanoSystems(this.ecs)
+        this.systemsManager.addSystem(Physics2DMovement, this.ecs)
+        this.systemsManager.addSystem(CollisionDetection, this.ecs)
     }
 
     update() {
+        this.systemsManager.updateAll();
         this.world.player.update();
         this.world.player.velocity_x *= this.world.friction
         this.world.player.velocity_y *= this.world.friction
@@ -45,31 +61,6 @@ module.exports = class Game {
 
     static get Player() {
         return Player;
-    }
-}
-
-class Physics2D {
-    constructor() {
-        this.x = (x ? x : 100);
-        this.y = (y ? y : 100);
-        this.velocity_x = 0;
-        this.velocity_y = 0;
-        this.speed = 10;
-        this.direction = [0, 1];
-    }
-
-    get velocity() {
-        // Get the distance between oldx/oldy and x/y
-    }
-
-    angle() {
-        var addDeg = 0;
-        if (this.velocity_x < 0)
-            addDeg = this.velocity_y >= 0 ? 180 : 270;
-        else if (this.velocity_y <= 0) addDeg = 360;
-
-        let deg = Math.abs(Math.abs(Math.atan(this.velocity_y / this.velocity_x) * 180 / Math.PI) - addDeg)
-        console.log(deg)
     }
 }
 

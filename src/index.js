@@ -9,6 +9,7 @@ window.onload = function(){
      * Passed into the engine, this is what occurs every game tick
      */
     let update = function(){
+        console.log(game.world_1.player)
         game.update();
         if(controller.up.active)    { game.world.player.moveUp() }
         if(controller.down.active)  { game.world.player.moveDown() }
@@ -20,6 +21,8 @@ window.onload = function(){
      * Passed into the engine, this is what gets displayed every game tick
      */
     let render = function(){
+
+        // TODO: Transfer display functionality to the new ECS
         display.drawBG(bg)
         display.drawImage(
             game.world.player.x,
@@ -109,6 +112,7 @@ window.onload = function(){
     // ============================
     //         START GAME
     // ============================
+    console.log(game.world.ecs)
     display.render();
     engine.start();
     render();
