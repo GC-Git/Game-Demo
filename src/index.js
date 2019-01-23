@@ -9,8 +9,19 @@ window.onload = function(){
      * Passed into the engine, this is what occurs every game tick
      */
     let update = function(){
-        console.log(game.world_1.player)
         game.update();
+
+        // TODO: Tidy this up and do it right.
+        if(controller.up.active)    { game.world_1.player.physics2D.moveUp() }
+        if(controller.down.active)  { game.world_1.player.physics2D.moveDown() }
+        if(controller.left.active)  { game.world_1.player.physics2D.moveLeft() }
+        if(controller.right.active) { game.world_1.player.physics2D.moveRight() }
+        game.world_1.player.physics2D.velocity_x *= game.world_1.gameMap.friction
+        game.world_1.player.physics2D.velocity_y *= game.world_1.gameMap.friction
+
+        console.log("y: " + game.world_1.player.physics2D.y.toFixed(0) + " x: " + game.world_1.player.physics2D.x.toFixed(0)) 
+        
+
         if(controller.up.active)    { game.world.player.moveUp() }
         if(controller.down.active)  { game.world.player.moveDown() }
         if(controller.left.active)  { game.world.player.moveLeft() }

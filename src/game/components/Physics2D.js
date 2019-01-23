@@ -17,10 +17,7 @@ module.exports = function Physics2D(){
         return deg;
     }
 
-    this.update = function() {
-        this.x += this.velocity_x;
-        this.y += this.velocity_y;
-    }
+
 
     this.moveUp = function() {
         this.velocity_y -= this.speed;
