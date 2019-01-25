@@ -36,13 +36,13 @@ window.onload = function(){
     let render = function(){
 
         // TODO: Transfer display functionality to the new ECS
-        display.drawBG(bg)
+        display.drawBG(assets.images.bg)
         display.drawImage(
             game.world.player.physics2D.x,
             game.world.player.physics2D.y, 
             game.world.player.square.width, 
             game.world.player.square.height, 
-            charImg
+            assets.images.charImg
         )
         display.render(
             x=game.world.player.physics2D.x+(game.world.player.square.width/2), y=game.world.player.physics2D.y+(game.world.player.square.height/2)
@@ -74,38 +74,40 @@ window.onload = function(){
         display.render()
     }
 
-    // ============================
-    //        LOAD ASSETS
-    // ============================
     class AssetsManager {
         constructor(){
-            this.tileSetImage = undefined;
+            this.tileSheets = {}; // Where we will store all our tileSheets
+            this.images     = {};
         }
 
-        loadTileSetImage(url, callback){
-            let newTileSetImage = new Image();
-            this.tileSetImage.addEventListener("load", function(){
-                callback();
-            }, {once: true});
-            newTileSetImage.src = url;
+        async addTileSheet(url, name) {
+            const image = await this.requestImage(url, name);
+            this.tileSheets[name] = image;
+        }
+
+        async addImage(url, name){
+            const image = await this.requestImage(url, name);
+            this.images[name] = image;
+        }
+
+        requestImage(url){
+            return new Promise(function(resolve, reject){
+                let image       = new Image();
+                image.src       = url;
+                image.onload    = () => resolve(image);
+                image.onerror   = () => reject(new Error("Image at " + url + " could not load."));
+            })
         }
     }
-
-    let dvdLogo     = new Image()
-    dvdLogo.src     = "images/pain.png"
-    let bg          = new Image()
-    bg.src          = "images/bg-town-01.jpg"
-    let charImg     = new Image()
-    charImg.src     = "images/char-01.png"
 
     // ============================
     //     DECLARE GAME PARTS
     // ============================
+    let assets      = new AssetsManager();
     let display     = new Display(document.getElementById('display'));
     let controller  = new Controller();
     let engine      = new Engine(1000/30, render, update);
     let game        = new Game();
-
 
     /* This is very important. The buffer canvas must be pixel for pixel the same
     size as the world dimensions to properly scale the graphics. All the game knows
@@ -113,12 +115,20 @@ window.onload = function(){
     display.buffer.canvas.height =  game.world.gameMap.height;
     display.buffer.canvas.width =   game.world.gameMap.width;
 
-    // On page load, resize the canvas to fit the window
-    display.resize(
-        document.documentElement.clientWidth-32,
-        document.documentElement.clientHeight-32,
-        game.world.gameMap.height / game.world.gameMap.width
-    )
+    // ============================
+    //        LOAD ASSETS
+    // ============================
+    assets.addImage('images/bg-town-01.jpg', 'bg')
+    .then(() => assets.addImage('images/char-01.png', 'charImg'))
+    .then(() => {
+        // ===============================
+        // START GAME AFTER LOADING ASSETS
+        // ===============================
+        resize();
+        display.render();
+        engine.start();
+        render();
+    })
 
     // ============================
     //    INITIALIZE LISTENERS
@@ -127,11 +137,4 @@ window.onload = function(){
     window.addEventListener("keyup",    controller.handleKeyDownUp);
     window.addEventListener("resize",   resize)
 
-
-    // ============================
-    //         START GAME
-    // ============================
-    display.render();
-    engine.start();
-    render();
 }
