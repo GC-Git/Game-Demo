@@ -2,6 +2,7 @@ const Display =     require('./display-01.js');
 const Controller =  require('./controller-01.js')
 const Engine =      require('./engine-01.js')
 const Game =        require('./game/game-01.js')
+const AssetsManager = require('./assetsManager-01.js')
 
 window.onload = function(){
 
@@ -11,19 +12,7 @@ window.onload = function(){
     let update = function(){
         game.update();
 
-        // TODO: Tidy this up and do it right.
-        /*
-        if(controller.up.active)    { game.world_1.player.physics2D.moveUp() }
-        if(controller.down.active)  { game.world_1.player.physics2D.moveDown() }
-        if(controller.left.active)  { game.world_1.player.physics2D.moveLeft() }
-        if(controller.right.active) { game.world_1.player.physics2D.moveRight() }
-        game.world_1.player.physics2D.velocity_x *= game.world_1.gameMap.friction
-        game.world_1.player.physics2D.velocity_y *= game.world_1.gameMap.friction
-
-        console.log("y: " + game.world_1.player.physics2D.y.toFixed(0) + " x: " + game.world_1.player.physics2D.x.toFixed(0)) 
-        */
-        
-
+        // USER INPUT
         if(controller.up.active)    { game.world.player.physics2D.moveUp() }
         if(controller.down.active)  { game.world.player.physics2D.moveDown() }
         if(controller.left.active)  { game.world.player.physics2D.moveLeft() }
@@ -34,36 +23,66 @@ window.onload = function(){
      * Passed into the engine, this is what gets displayed every game tick
      */
     let render = function(){
+        let ts = assets.tileSheets
 
-        // TODO: Transfer display functionality to the new ECS
+        // DRAW BACKGROUND
         display.drawBG(assets.images.bg)
-        display.drawImage(
+
+        let playerVel_X = game.world.player.physics2D.velocity_x;
+        let playerVel_Y = game.world.player.physics2D.velocity_y;
+        let playerSprite;
+  
+
+        if(playerVel_X > playerVel_Y && playerVel_X > -playerVel_Y)         {playerSprite = assets.getTile(ts.human, 1); console.log('Right')}
+        else if(-playerVel_X > playerVel_Y && -playerVel_X > -playerVel_Y)  {playerSprite = assets.getTile(ts.human, 3); console.log('Left')}
+        else if(playerVel_Y > playerVel_X && playerVel_Y > -playerVel_X)    {playerSprite = assets.getTile(ts.human, 0); console.log('Down')}
+        else if(-playerVel_Y > playerVel_X && -playerVel_Y > -playerVel_X)  {playerSprite = assets.getTile(ts.human, 2); console.log('Up')}
+        else {playerSprite = assets.getTile(ts.human, 0); console.log('Not Moving')}
+        
+        console.log(playerSprite.startX)
+        console.log(playerSprite.endX)
+        console.log(playerSprite.startY)
+        console.log(playerSprite.endY)
+
+        // DRAW PLAYER
+        display.buffer.drawImage(
+            ts.human.image, 
+            playerSprite.startX,
+            playerSprite.startY,
+            playerSprite.endX - playerSprite.startX,
+            playerSprite.endY - playerSprite.startY,
             game.world.player.physics2D.x,
             game.world.player.physics2D.y, 
             game.world.player.square.width, 
             game.world.player.square.height, 
-            assets.images.charImg
-        )
+            )
+
+        // display.drawImage(
+        //     game.world.player.physics2D.x,
+        //     game.world.player.physics2D.y, 
+        //     game.world.player.square.width, 
+        //     game.world.player.square.height, 
+        //     playerSprite
+        // )
+        
+        // DRAW FROM BUFFER TO CANVAS
         display.render(
-            x=game.world.player.physics2D.x+(game.world.player.square.width/2), y=game.world.player.physics2D.y+(game.world.player.square.height/2)
+            x=game.world.player.physics2D.x+(game.world.player.square.width/2),
+            y=game.world.player.physics2D.y+(game.world.player.square.height/2)
         )
 
-
+        // DRAW HUD
         display.context.fillStyle = "white";
         display.context.fillRect(5,15, 200, 110);
-
         display.context.font = "30px Arial";
         display.context.fillStyle = "black";
-
         display.context.fillText("Degrees: "+game.world.player.physics2D.angle().toFixed(0), 10, 50);
-
         display.context.fillText("vel X: " + game.world.player.physics2D.velocity_x.toFixed(0), 10, 80);
-
         display.context.fillText("vel_Y: " + game.world.player.physics2D.velocity_y.toFixed(0), 10, 110);
     }
 
     /**
-     * Passed to the 'resize' event listener to process alterations in window size.
+     * Resizes to window size and re-renders
      */
     let resize = function(){
         display.resize(
@@ -74,32 +93,7 @@ window.onload = function(){
         display.render()
     }
 
-    class AssetsManager {
-        constructor(){
-            this.tileSheets = {}; // Where we will store all our tileSheets
-            this.images     = {};
-        }
-
-        async addTileSheet(url, name) {
-            const image = await this.requestImage(url, name);
-            this.tileSheets[name] = image;
-        }
-
-        async addImage(url, name){
-            const image = await this.requestImage(url, name);
-            this.images[name] = image;
-        }
-
-        requestImage(url){
-            return new Promise(function(resolve, reject){
-                let image       = new Image();
-                image.src       = url;
-                image.onload    = () => resolve(image);
-                image.onerror   = () => reject(new Error("Image at " + url + " could not load."));
-            })
-        }
-    }
-
+    
     // ============================
     //     DECLARE GAME PARTS
     // ============================
@@ -120,10 +114,11 @@ window.onload = function(){
     // ============================
     assets.addImage('images/bg-town-01.jpg', 'bg')
     .then(() => assets.addImage('images/char-01.png', 'charImg'))
+    .then(() => assets.addTileSheet('images/tilesheet-01.png', 'human', 32, 32, 2))
     .then(() => {
-        // ===============================
-        // START GAME AFTER LOADING ASSETS
-        // ===============================
+        // -------------------------------------
+        //    START GAME AFTER LOADING ASSETS
+        // -------------------------------------        
         resize();
         display.render();
         engine.start();

@@ -18,6 +18,7 @@ module.exports = {
         let entity = helpers.createEntity(world, components, tags)
         
         entity.player = Player.default(world)
+        entity.gameMap.friction = .80
 
         return entity
     }

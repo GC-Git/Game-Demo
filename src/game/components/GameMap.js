@@ -3,4 +3,7 @@ module.exports = function GameMap(){
     this.friction = 0.95;
     this.height = 3000;
     this.width = 3000;
+    this.map = [];
+    this.collisionMap = [];
+    this.tileLabels = {};
 }
