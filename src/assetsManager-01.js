@@ -8,7 +8,7 @@ module.exports = class AssetsManager {
         const image = await this.requestImage(url, name);
         this.tileSheets[name] = {
             name: name,
-            columns: columns - 1,
+            columns: columns,
             width: width,
             height: height,
             image: image
@@ -20,23 +20,15 @@ module.exports = class AssetsManager {
         this.images[name] = image;
     }
 
+    // TODO: UNDER CONSTRUCTION
     getTile(tilesheet, tileNumber){
-        // debugger
-        // TODO: The fucking math
-        let column = tileNumber % tilesheet.columns;
-        console.log("column: " , column)
-        let row = tileNumber / tilesheet.columns;
-        console.log("row: ", row)
-        let startX = column * tilesheet.width;
-        let startY = row * tilesheet.height;
-        let endX = startX + tilesheet.width;
-        let endY = startY + tilesheet.height;
-
+        let x = tileNumber % tilesheet.columns;
+        let y = Math.floor(tileNumber / tilesheet.columns)
         return {
-            startX: startX,
-            startY: startY,
-            endX: endX,
-            endY: endY,
+            startX: x * tilesheet.width,
+            startY: y * tilesheet.height,
+            width: tilesheet.width,
+            height: tilesheet.height,
         }
     }
 

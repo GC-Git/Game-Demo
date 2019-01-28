@@ -26,31 +26,26 @@ window.onload = function(){
         let ts = assets.tileSheets
 
         // DRAW BACKGROUND
-        display.drawBG(assets.images.bg)
+        // display.drawBG(assets.images.bg)
+        display.drawMap(game.world.gameMap)
 
         let playerVel_X = game.world.player.physics2D.velocity_x;
-        let playerVel_Y = game.world.player.physics2D.velocity_y;
-        let playerSprite;
-  
+        let playerVel_Y = game.world.player.physics2D.velocity_y;  
 
-        if(playerVel_X > playerVel_Y && playerVel_X > -playerVel_Y)         {playerSprite = assets.getTile(ts.human, 1); console.log('Right')}
-        else if(-playerVel_X > playerVel_Y && -playerVel_X > -playerVel_Y)  {playerSprite = assets.getTile(ts.human, 3); console.log('Left')}
-        else if(playerVel_Y > playerVel_X && playerVel_Y > -playerVel_X)    {playerSprite = assets.getTile(ts.human, 0); console.log('Down')}
-        else if(-playerVel_Y > playerVel_X && -playerVel_Y > -playerVel_X)  {playerSprite = assets.getTile(ts.human, 2); console.log('Up')}
-        else {playerSprite = assets.getTile(ts.human, 0); console.log('Not Moving')}
+        if(playerVel_X > playerVel_Y && playerVel_X > -playerVel_Y)         {playerSprite = assets.getTile(ts.human, 2);}
+        else if(-playerVel_X > playerVel_Y && -playerVel_X > -playerVel_Y)  {playerSprite = assets.getTile(ts.human, 3);}
+        else if(playerVel_Y > playerVel_X && playerVel_Y > -playerVel_X)    {playerSprite = assets.getTile(ts.human, 0);}
+        else if(-playerVel_Y > playerVel_X && -playerVel_Y > -playerVel_X)  {playerSprite = assets.getTile(ts.human, 1);}
+        else {playerSprite = assets.getTile(ts.human, 0);}
         
-        console.log(playerSprite.startX)
-        console.log(playerSprite.endX)
-        console.log(playerSprite.startY)
-        console.log(playerSprite.endY)
 
         // DRAW PLAYER
         display.buffer.drawImage(
             ts.human.image, 
             playerSprite.startX,
             playerSprite.startY,
-            playerSprite.endX - playerSprite.startX,
-            playerSprite.endY - playerSprite.startY,
+            playerSprite.width,
+            playerSprite.height,
             game.world.player.physics2D.x,
             game.world.player.physics2D.y, 
             game.world.player.square.width, 

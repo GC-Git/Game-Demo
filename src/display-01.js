@@ -27,6 +27,31 @@ module.exports = class Display {
         }
     }
 
+    drawMap(world){
+        let mapHeight = world.rows;
+        let mapWidth = world.columns;
+        let tileSize = world.tileSize;
+        console.log(world)
+
+        for(let index = 0; index < mapWidth*mapHeight; index++){
+            let tileValue = world.map[index];
+            let tileColor;
+            switch(tileValue) {
+                case 0: tileColor   = "#4CAF50"; break;
+                case 1: tileColor   = "#007ACC"; break;
+                default: tileColor  = "#090909"; break;
+            }
+        
+            let x = index % mapWidth;
+            let y = Math.floor(index / mapHeight);
+            let startXCoord = x * tileSize;
+            let startYCoord = y * tileSize;
+
+
+            this.drawRect(startXCoord, startYCoord, tileSize, tileSize, tileColor);
+        }
+    }
+
     /**
      * Draws an image to the buffer at the x and y coordinates. Images will scale with height / width
      * @param {number} x 
@@ -54,6 +79,7 @@ module.exports = class Display {
      * @param {string} color 
      */
     drawRect(x, y, width, height, color) {
+        console.log(this)
         this.buffer.fillStyle = color;
         this.buffer.fillRect(Math.floor(x), Math.floor(y), width, height);
     };
@@ -118,13 +144,5 @@ class Camera {
         this.height = height;
         // this.x = 0;
         // this.y = 0;
-    }
-}
-
-class TileSet {
-    constructor(image, width, columns){
-        this.width      = width;
-        this.columns    = columns;
-        this.image      = image;
     }
 }
