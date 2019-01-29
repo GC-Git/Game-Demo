@@ -4,3 +4,4 @@ node_modules
 Baystation12-dev
 .nyc_output
 coverage
+.assets

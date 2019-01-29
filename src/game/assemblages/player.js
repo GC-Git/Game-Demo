@@ -3,6 +3,7 @@ const helpers = require('./helpers');
 // Components
 const Physics2D = require('../components/Physics2D');
 const Square = require('../components/Square');
+const Animation = require('../components/Animation');
 
 const tags = [
     'player'
@@ -10,7 +11,8 @@ const tags = [
 
 const components = [
     Physics2D,
-    Square
+    Square,
+    Animation
 ]
 
 module.exports = {
@@ -19,6 +21,7 @@ module.exports = {
     
         entity.square.width = 100;
         entity.square.height = 100;
+
         entity.square.color = '#000000';
         entity.physics2D.speed = 2;
 

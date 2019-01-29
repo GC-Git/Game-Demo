@@ -17,7 +17,25 @@ module.exports = function Physics2D(){
         return deg;
     }
 
+    this.direction = function(){
+        let playerVel_X = this.velocity_x;
+        let playerVel_Y = this.velocity_y;  
 
+        // RIGHT
+        if(playerVel_X > playerVel_Y && playerVel_X > -playerVel_Y){
+            return 1;
+        } // LEFT
+        else if(-playerVel_X > playerVel_Y && -playerVel_X > -playerVel_Y){ 
+            return 3
+        } // DOWN
+        else if(playerVel_Y > playerVel_X && playerVel_Y > -playerVel_X){
+            return 2
+        } // UP
+        else if(-playerVel_Y > playerVel_X && -playerVel_Y > -playerVel_X){
+            return 0
+        } // DEFAULT (DOWN)
+        else {return 2}
+    }
 
     this.moveUp = function() {
         this.velocity_y -= this.speed;

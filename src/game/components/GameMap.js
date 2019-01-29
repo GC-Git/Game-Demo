@@ -4,7 +4,7 @@ module.exports = function GameMap(){
 
     this.columns = 10;
     this.rows = 10;
-    this.tileSize = 128;
+    this.tileSize = 100;
     this.map = [
         2,2,2,2,33,2,2,2,2,2,
         2,2,2,2,33,2,2,2,2,2,

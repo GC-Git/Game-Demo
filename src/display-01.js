@@ -35,7 +35,6 @@ module.exports = class Display {
             startY: y * tilesheet.height,
             width: tilesheet.width,
             height: tilesheet.height,
-            // image: 
         }
     }
 

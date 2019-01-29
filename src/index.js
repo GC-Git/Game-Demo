@@ -13,10 +13,18 @@ window.onload = function(){
         game.update();
 
         // USER INPUT
-        if(controller.up.active)    { game.world.player.physics2D.moveUp() }
-        if(controller.down.active)  { game.world.player.physics2D.moveDown() }
-        if(controller.left.active)  { game.world.player.physics2D.moveLeft() }
-        if(controller.right.active) { game.world.player.physics2D.moveRight() }
+        if(controller.up.active)    {
+             game.world.player.physics2D.moveUp();
+            }
+        if(controller.down.active)  {
+             game.world.player.physics2D.moveDown();
+            }
+        if(controller.left.active)  {
+             game.world.player.physics2D.moveLeft();
+            }
+        if(controller.right.active) {
+             game.world.player.physics2D.moveRight();
+            }
     }
         
     /**
@@ -25,23 +33,49 @@ window.onload = function(){
     let render = function(){
         let ts = assets.tileSheets
 
-        // DRAW BACKGROUND
+        /*============================
+              DRAW THE BACKGROUND
+        ==============================*/        
         // display.drawBG(assets.images.bg)
         display.drawMap(game.world.gameMap, ts.floors)
+
+        /*============================
+                DRAW THE PLAYER
+        ==============================*/
+        let playerSpriteSheet = ts.male
+        let playerSprite;
+        let frameNumber;
 
         let playerVel_X = game.world.player.physics2D.velocity_x;
         let playerVel_Y = game.world.player.physics2D.velocity_y;  
 
-        if(playerVel_X > playerVel_Y && playerVel_X > -playerVel_Y)         {playerSprite = display.getTile(ts.human, 2);}
-        else if(-playerVel_X > playerVel_Y && -playerVel_X > -playerVel_Y)  {playerSprite = display.getTile(ts.human, 3);}
-        else if(playerVel_Y > playerVel_X && playerVel_Y > -playerVel_X)    {playerSprite = display.getTile(ts.human, 0);}
-        else if(-playerVel_Y > playerVel_X && -playerVel_Y > -playerVel_X)  {playerSprite = display.getTile(ts.human, 1);}
-        else {playerSprite = display.getTile(ts.human, 0);}
-        
+        if(controller.up.active)    {
+            game.world.player.animation.change(playerSpriteSheet.frameSets[0], 2)
+            frameNumber = game.world.player.animation.frame;
+            playerSprite = display.getTile(playerSpriteSheet, frameNumber)
+        }
+        else if(controller.down.active)  {
+            game.world.player.animation.change(playerSpriteSheet.frameSets[2], 2)
+            frameNumber = game.world.player.animation.frame;
+            playerSprite = display.getTile(playerSpriteSheet, frameNumber)
+        }
+        else if(controller.left.active)  {
+            game.world.player.animation.change(playerSpriteSheet.frameSets[3], 2)
+            frameNumber = game.world.player.animation.frame;
+            playerSprite = display.getTile(playerSpriteSheet, frameNumber)
+        }
+        else if(controller.right.active) {
+            game.world.player.animation.change(playerSpriteSheet.frameSets[1], 2)
+            frameNumber = game.world.player.animation.frame;
+            playerSprite = display.getTile(playerSpriteSheet, frameNumber)
+        }
+        else {
+            // Defaults the player sprite to the first tile of the last frameset of the players sprite sheet. This should always be an idle image IF we are using this. Realistically we should have an idle animation.
+            playerSprite = display.getTile(playerSpriteSheet, playerSpriteSheet.frameSets[playerSpriteSheet.frameSets.length-1])
+        }
 
-        // DRAW PLAYER
         display.buffer.drawImage(
-            ts.human.image, 
+            playerSpriteSheet.image, 
             playerSprite.startX,
             playerSprite.startY,
             playerSprite.width,
@@ -50,23 +84,22 @@ window.onload = function(){
             game.world.player.physics2D.y, 
             game.world.player.square.width, 
             game.world.player.square.height, 
-            )
-
-        // display.drawImage(
-        //     game.world.player.physics2D.x,
-        //     game.world.player.physics2D.y, 
-        //     game.world.player.square.width, 
-        //     game.world.player.square.height, 
-        //     playerSprite
-        // )
+        )
         
-        // DRAW FROM BUFFER TO CANVAS
+        game.world.player.animation.update();
+
+        
+        /*============================
+             DRAW BUFFER TO CANVAS
+        ==============================*/
         display.render(
             x=game.world.player.physics2D.x+(game.world.player.square.width/2),
             y=game.world.player.physics2D.y+(game.world.player.square.height/2)
         )
 
-        // DRAW HUD
+        /*============================
+                DRAW THE HUD
+        ==============================*/
         display.context.fillStyle = "white";
         display.context.fillRect(5,15, 200, 110);
         display.context.font = "30px Arial";
@@ -111,6 +144,14 @@ window.onload = function(){
     .then(() => assets.addImage('images/char-01.png', 'charImg'))
     .then(() => assets.addTileSheet('images/tilesheet-01.png', 'human', 32, 32, 2))
     .then(() => assets.addTileSheet('images/floors.png', 'floors', 32, 32, 8))
+    .then(() => assets.addTileSheet('images/BODY_male.png', 'male', 64, 64, 9,[
+        // Designating frame sets (the frames in an animation)
+        [ 1,  2,  3,  4,  5,  6,  7,  8],   // 0 Walk up
+        [27, 28, 29, 30, 31, 32, 33, 34, 35],  // 1 Walk right
+        [19, 20, 21, 22, 23, 24, 25, 26],  // 2 Walk down
+        [ 9, 10, 11, 12, 13, 14, 15, 16, 17],   // 3 Walk left
+        [18]                                    // 4 Idle facing down
+    ]))
     .then(() => {
         // -------------------------------------
         //    START GAME AFTER LOADING ASSETS
