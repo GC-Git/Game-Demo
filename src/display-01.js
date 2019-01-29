@@ -27,11 +27,24 @@ module.exports = class Display {
         }
     }
 
-    drawMap(world){
+    getTile(tilesheet, tileNumber){
+        let x = tileNumber % tilesheet.columns;
+        let y = Math.floor(tileNumber / tilesheet.columns)
+        return {
+            startX: x * tilesheet.width,
+            startY: y * tilesheet.height,
+            width: tilesheet.width,
+            height: tilesheet.height,
+            // image: 
+        }
+    }
+
+    drawMap(world, tilesheet=undefined){
+        
         let mapHeight = world.rows;
         let mapWidth = world.columns;
         let tileSize = world.tileSize;
-        console.log(world)
+
 
         for(let index = 0; index < mapWidth*mapHeight; index++){
             let tileValue = world.map[index];
@@ -39,6 +52,7 @@ module.exports = class Display {
             switch(tileValue) {
                 case 0: tileColor   = "#4CAF50"; break;
                 case 1: tileColor   = "#007ACC"; break;
+                case 2: tileColor   = "#FFCD42"; break;
                 default: tileColor  = "#090909"; break;
             }
         
@@ -47,8 +61,22 @@ module.exports = class Display {
             let startXCoord = x * tileSize;
             let startYCoord = y * tileSize;
 
-
-            this.drawRect(startXCoord, startYCoord, tileSize, tileSize, tileColor);
+            if(tilesheet){
+                let tileImageInfo = this.getTile(tilesheet, tileValue)
+                this.buffer.drawImage(
+                    tilesheet.image,
+                    tileImageInfo.startX,
+                    tileImageInfo.startY,
+                    tileImageInfo.width,
+                    tileImageInfo.height,
+                    startXCoord,
+                    startYCoord,
+                    tileSize,
+                    tileSize
+                )
+            } else {
+                this.drawRect(startXCoord, startYCoord, tileSize, tileSize, tileColor);
+            }
         }
     }
 

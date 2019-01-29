@@ -27,16 +27,16 @@ window.onload = function(){
 
         // DRAW BACKGROUND
         // display.drawBG(assets.images.bg)
-        display.drawMap(game.world.gameMap)
+        display.drawMap(game.world.gameMap, ts.floors)
 
         let playerVel_X = game.world.player.physics2D.velocity_x;
         let playerVel_Y = game.world.player.physics2D.velocity_y;  
 
-        if(playerVel_X > playerVel_Y && playerVel_X > -playerVel_Y)         {playerSprite = assets.getTile(ts.human, 2);}
-        else if(-playerVel_X > playerVel_Y && -playerVel_X > -playerVel_Y)  {playerSprite = assets.getTile(ts.human, 3);}
-        else if(playerVel_Y > playerVel_X && playerVel_Y > -playerVel_X)    {playerSprite = assets.getTile(ts.human, 0);}
-        else if(-playerVel_Y > playerVel_X && -playerVel_Y > -playerVel_X)  {playerSprite = assets.getTile(ts.human, 1);}
-        else {playerSprite = assets.getTile(ts.human, 0);}
+        if(playerVel_X > playerVel_Y && playerVel_X > -playerVel_Y)         {playerSprite = display.getTile(ts.human, 2);}
+        else if(-playerVel_X > playerVel_Y && -playerVel_X > -playerVel_Y)  {playerSprite = display.getTile(ts.human, 3);}
+        else if(playerVel_Y > playerVel_X && playerVel_Y > -playerVel_X)    {playerSprite = display.getTile(ts.human, 0);}
+        else if(-playerVel_Y > playerVel_X && -playerVel_Y > -playerVel_X)  {playerSprite = display.getTile(ts.human, 1);}
+        else {playerSprite = display.getTile(ts.human, 0);}
         
 
         // DRAW PLAYER
@@ -110,6 +110,7 @@ window.onload = function(){
     assets.addImage('images/bg-town-01.jpg', 'bg')
     .then(() => assets.addImage('images/char-01.png', 'charImg'))
     .then(() => assets.addTileSheet('images/tilesheet-01.png', 'human', 32, 32, 2))
+    .then(() => assets.addTileSheet('images/floors.png', 'floors', 32, 32, 8))
     .then(() => {
         // -------------------------------------
         //    START GAME AFTER LOADING ASSETS

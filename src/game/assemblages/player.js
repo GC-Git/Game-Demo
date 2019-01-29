@@ -20,7 +20,7 @@ module.exports = {
         entity.square.width = 100;
         entity.square.height = 100;
         entity.square.color = '#000000';
-        entity.physics2D.speed = 1;
+        entity.physics2D.speed = 2;
 
         return entity
     }

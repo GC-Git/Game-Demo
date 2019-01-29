@@ -20,18 +20,6 @@ module.exports = class AssetsManager {
         this.images[name] = image;
     }
 
-    // TODO: UNDER CONSTRUCTION
-    getTile(tilesheet, tileNumber){
-        let x = tileNumber % tilesheet.columns;
-        let y = Math.floor(tileNumber / tilesheet.columns)
-        return {
-            startX: x * tilesheet.width,
-            startY: y * tilesheet.height,
-            width: tilesheet.width,
-            height: tilesheet.height,
-        }
-    }
-
     requestImage(url){
         return new Promise(function(resolve, reject){
             let image       = new Image();
