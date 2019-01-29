@@ -33,8 +33,8 @@ module.exports = class Display {
         return {
             startX: x * tilesheet.width,
             startY: y * tilesheet.height,
-            width: tilesheet.width,
-            height: tilesheet.height,
+            width: tilesheet.width-1,
+            height: tilesheet.height-1,
         }
     }
 
@@ -44,9 +44,9 @@ module.exports = class Display {
         let mapWidth = world.columns;
         let tileSize = world.tileSize;
 
-
         for(let index = 0; index < mapWidth*mapHeight; index++){
             let tileValue = world.map[index];
+            if(tileValue == 32){debugger}
             let tileColor;
             switch(tileValue) {
                 case 0: tileColor   = "#4CAF50"; break;

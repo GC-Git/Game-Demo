@@ -37,7 +37,7 @@ window.onload = function(){
               DRAW THE BACKGROUND
         ==============================*/        
         // display.drawBG(assets.images.bg)
-        display.drawMap(game.world.gameMap, ts.floors)
+        display.drawMap(game.world.gameMap, ts.terrain)
 
         /*============================
                 DRAW THE PLAYER
@@ -144,6 +144,7 @@ window.onload = function(){
     .then(() => assets.addImage('images/char-01.png', 'charImg'))
     .then(() => assets.addTileSheet('images/tilesheet-01.png', 'human', 32, 32, 2))
     .then(() => assets.addTileSheet('images/floors.png', 'floors', 32, 32, 8))
+    .then(() => assets.addTileSheet('images/terrain-v7.png', 'terrain', 32, 32, 32))
     .then(() => assets.addTileSheet('images/BODY_male.png', 'male', 64, 64, 9,[
         // Designating frame sets (the frames in an animation)
         [ 1,  2,  3,  4,  5,  6,  7,  8],   // 0 Walk up
