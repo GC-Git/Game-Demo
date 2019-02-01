@@ -12,19 +12,49 @@ window.onload = function(){
     let update = function(){
         game.update();
 
+        let player = game.world.player;
+        let zeroGrav = game.world.gameMap.gravity == 0;
+        let yHasMoved = !(player.physics2D.y == player.physics2D.old_y)
+        let xHasMoved = !(player.physics2D.x == player.physics2D.old_x)
+
         // USER INPUT
         if(controller.up.active)    {
-             game.world.player.physics2D.moveUp();
+            if (!zeroGrav) { // If a world has gravity
+                // If the player hasnt moved up or down, let them jump
+                if(!yHasMoved){
+                    player.physics2D.moveUp(multiplier=20);
+                }
             }
+            else { // If a world is zero G
+                player.physics2D.moveUp();
+            }
+        }
         if(controller.down.active)  {
-             game.world.player.physics2D.moveDown();
+            if (!zeroGrav) {
+                
             }
+            else { // If a world is zero G
+                player.physics2D.moveDown();    
+            }
+        }
         if(controller.left.active)  {
-             game.world.player.physics2D.moveLeft();
+            if (!zeroGrav) {
+                if(!yHasMoved){
+                    player.physics2D.moveLeft();
+                }
+            } else { // If a world is zero G
+                player.physics2D.moveLeft();
             }
+        }
         if(controller.right.active) {
-             game.world.player.physics2D.moveRight();
+            if (!zeroGrav) {
+                if(!yHasMoved){
+                    player.physics2D.moveRight();
+                }
+            } else { // If a world is zero G
+                player.physics2D.moveRight();
             }
+        }
     }
         
     /**

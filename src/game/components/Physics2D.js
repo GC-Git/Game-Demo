@@ -39,10 +39,8 @@ module.exports = function Physics2D(){
         else {return 2}
     }
 
-    this.moveUp = function() {
-        if(this.velocity_y <= 0 && this.y == this.old_y){
-            this.velocity_y = -this.speed*15;
-        }
+    this.moveUp = function(multiplier=1) {
+        this.velocity_y -= this.speed*multiplier;
     }
 
     this.moveDown = function() {
@@ -50,14 +48,11 @@ module.exports = function Physics2D(){
     }
 
     this.moveRight = function() {
-        if(this.velocity_y <= 0 && this.y == this.old_y){
-            this.velocity_x += this.speed;            
-        }
+        this.velocity_x += this.speed;            
     }
 
     this.moveLeft = function() {
-        if(this.velocity_y <= 0 && this.y == this.old_y){
-            this.velocity_x -= this.speed;
-        }    
+        this.velocity_x -= this.speed;
+           
     }
 }

@@ -18,10 +18,10 @@ module.exports = function CollisionDetection(ecs){
 
             if (x1 < 0) {
                 currentScene.player.physics2D.x = 0;
-                currentScene.player.physics2D.velocity_x = -currentScene.player.physics2D.velocity_x;
+                currentScene.player.physics2D.velocity_x = -currentScene.player.physics2D.velocity_x * currentScene.gameMap.bounce;
             } else if (x2 > currentScene.gameMap.width) {
                 currentScene.player.physics2D.x = currentScene.gameMap.width - currentScene.player.square.width;
-                currentScene.player.physics2D.velocity_x = -currentScene.player.physics2D.velocity_x;
+                currentScene.player.physics2D.velocity_x = -currentScene.player.physics2D.velocity_x * currentScene.gameMap.bounce;
             }
 
             if (y1 < 0) {

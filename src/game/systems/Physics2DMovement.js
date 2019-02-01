@@ -7,7 +7,7 @@ module.exports = function Physics2DMovement(ecs){
 
         candidates.forEach(function(entity) {
 
-            if(entity.physics2D.old_y == entity.physics2D.y){ // If touching the ground
+            if(entity.physics2D.old_y == entity.physics2D.y || entity.physics2D.old_x == entity.physics2D.x){ // If touching the ground
                 entity.physics2D.velocity_y *= ecs.world.gameMap.friction
                 entity.physics2D.velocity_x *= ecs.world.gameMap.friction
             } else {

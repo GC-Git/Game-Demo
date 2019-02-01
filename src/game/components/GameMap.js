@@ -1,8 +1,8 @@
 module.exports = function GameMap(){
     this.backgroundColor = "rgba(45,48,56,0.25)";
     this.friction = 0.95;
-    this.gravity = 9.81;
-    this.bounce = 0.3;
+    this.gravity = 0;
+    this.bounce = 0;
 
     this.columns = 10;
     this.rows = 10;
