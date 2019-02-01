@@ -6,7 +6,8 @@ const Player = require('./player');
 const GameMap = require('../components/GameMap');
 
 const tags = [
-    'scene'
+    'scene',
+    'map'
 ]
 
 const components = [

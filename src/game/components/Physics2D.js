@@ -1,9 +1,11 @@
 module.exports = function Physics2D(){
     this.x          = 100;
+    this.old_x      = this.x;
     this.y          = 100;
+    this.old_y      = this.y;
     this.velocity_x = 0;
     this.velocity_y = 0;
-    this.speed = .4;
+    this.speed      = .4;
 
     
     // Magic from stack overflow to get angle in degrees from velocities
@@ -38,7 +40,9 @@ module.exports = function Physics2D(){
     }
 
     this.moveUp = function() {
-        this.velocity_y -= this.speed;
+        if(this.velocity_y <= 0 && this.y == this.old_y){
+            this.velocity_y = -this.speed*15;
+        }
     }
 
     this.moveDown = function() {
@@ -46,10 +50,14 @@ module.exports = function Physics2D(){
     }
 
     this.moveRight = function() {
-        this.velocity_x += this.speed;
+        if(this.velocity_y <= 0 && this.y == this.old_y){
+            this.velocity_x += this.speed;            
+        }
     }
 
     this.moveLeft = function() {
-        this.velocity_x -= this.speed;
+        if(this.velocity_y <= 0 && this.y == this.old_y){
+            this.velocity_x -= this.speed;
+        }    
     }
 }

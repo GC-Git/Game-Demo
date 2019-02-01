@@ -1,13 +1,13 @@
 const Physics2D = require('../components/Physics2D');
 const Square = require('../components/Square');
 
-module.exports = function CollisionDetection(world){
+module.exports = function CollisionDetection(ecs){
     this.update = function(){
         this.playerWallCollision();
     }
 
     this.playerWallCollision = function(){
-        let scene = world.queryTag('scene');
+        let scene = ecs.queryTag('map');
 
         scene.forEach(function(currentScene){
             if(!currentScene.player.hasAllComponents([Physics2D, Square])) throw "Player has invalid components for collision detection"
@@ -26,10 +26,10 @@ module.exports = function CollisionDetection(world){
 
             if (y1 < 0) {
                 currentScene.player.physics2D.y = 0;
-                currentScene.player.physics2D.velocity_y = -currentScene.player.physics2D.velocity_y;
+                currentScene.player.physics2D.velocity_y = -currentScene.player.physics2D.velocity_y * currentScene.gameMap.bounce;
             } else if (y2 > currentScene.gameMap.height) {
                 currentScene.player.physics2D.y = currentScene.gameMap.height - currentScene.player.square.height;
-                currentScene.player.physics2D.velocity_y = -currentScene.player.physics2D.velocity_y;
+                currentScene.player.physics2D.velocity_y = -currentScene.player.physics2D.velocity_y * currentScene.gameMap.bounce;
             }
         })
 

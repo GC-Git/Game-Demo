@@ -15,6 +15,8 @@ module.exports = class Game {
         // Entities
         // TODO: Transfer display functionality to the new ECS        
         this.world = GameMap.default(this.ecs)
+        this.ecs.world = this.world; // So we can reference things like gravity within our systems
+
         this.systemsManager = nanoSystems(this.ecs)
         this.systemsManager.addSystem(Physics2DMovement, this.ecs)
         this.systemsManager.addSystem(CollisionDetection, this.ecs)
@@ -22,8 +24,7 @@ module.exports = class Game {
 
     update() {
         this.systemsManager.updateAll();
-        this.world.player.physics2D.velocity_x *= this.world.gameMap.friction
-        this.world.player.physics2D.velocity_y *= this.world.gameMap.friction
+        this.ecs.world = this.world; // So we can reference world variables.
     }
 }
 

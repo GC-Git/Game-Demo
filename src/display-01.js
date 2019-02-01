@@ -33,8 +33,8 @@ module.exports = class Display {
         return {
             startX: x * tilesheet.width,
             startY: y * tilesheet.height,
-            width: tilesheet.width-1,
-            height: tilesheet.height-1,
+            width: tilesheet.width,
+            height: tilesheet.height,
         }
     }
 
